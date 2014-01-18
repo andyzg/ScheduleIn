@@ -30,32 +30,30 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', function(req, res) {
+app.get('/', isLoggedIn, function(req, res) {
 	res.redirect('login');
 });
 
-app.get('/login', function(req, res) {
+app.get('/login', isLoggedIn, function(req, res) {
+	if ( req.query.error != null ) {
+		console.log("Hello there");
+		res.render('login', {message:"Invalid login"});
+		return;
+	}
 	res.render('login');
 });
 
 app.post('/login', function(req, res) {
 	auth.authenticate(req.body.user, req.body.password, function(err, user){
 		if ( err ) {
-			res.redirect('/login&error=1')
+			res.redirect('/login?error=1');
 		}
 		else if ( user != null) {
 			// Regenerate session when signing in
 			// to prevent fixation 
 			req.session.regenerate(function(){
-			
-				// Store the user's primary key 
-				// in the session store to be retrieved,
-				// or in this case the entire user object
-				
+				// Store the user's primary key into the current session
 				req.session.user = user;
-				req.session.success = 'Authenticated as ' + user.name
-					+ ' click to <a href="/logout">logout</a>. '
-					+ ' You may now access <a href="/restricted">/restricted</a>.';
 				res.redirect('/list');
 			});
 		} else {
@@ -77,7 +75,28 @@ app.post('/signup', function(req, res) {
 	});
 });
 
-app.get('/list', routes.index);
+app.get('/list', function(req, res) {
+	if (req.session.user != null) {
+		routes.index(req, res);
+	}
+	else {
+		res.redirect('/login');
+	}
+});
+
+app.get('/logout', function(req, res) {
+	req.session.user = null;
+	res.redirect('/');
+});
+
+// Routing for requests if user is authenticated
+function isLoggedIn(req, res, next) {
+	console.log(req.session.user);
+	if (req.session.user != null) {
+		res.redirect('/list');
+	}
+	next();
+};
 
 if (!module.parent) {
 	http.createServer(app).listen(app.get('port'), function(){
