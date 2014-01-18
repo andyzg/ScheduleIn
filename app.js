@@ -6,7 +6,7 @@ var http = require('http');
 var path = require('path');
 var auth = require('./assets/auth');
 
-var ArticleProvider = require('./assets/UserProvider');
+var UserProvider = require('./assets/UserProvider');
 var app = express();
 
 // all environments

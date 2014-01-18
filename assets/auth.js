@@ -1,5 +1,5 @@
-var UserProvider = require('./UserProvider').UserProvider;
-var userProvider = new UserProvider('localhost', 27017);
+var userProvider = require('./UserProvider');
+// var userProvider = new UserProvider('localhost', 27017);
 
 exports.authenticate = function(name, pass, callback) {
 	console.log('authenticating %s:%s', name, pass);	
@@ -9,9 +9,12 @@ exports.authenticate = function(name, pass, callback) {
 		console.log(response);
 		
 		// query the db for the given username
-		if ( !user ) {
+		if ( !response ) {
 			console.log("Cannot find user");
 			return callback(new Error('cannot find user'));
+		}
+		else {
+			callback(response);
 		}
 	});
 };

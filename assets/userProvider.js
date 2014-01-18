@@ -1,17 +1,29 @@
 // Database config
-var MongoClient = require('mongodb').MongoClient;
+/*var MongoClient = require('mongodb').MongoClient;
 var format = require('util').format;
 var Db = require('mongodb').Db;
-var Server = require('mongodb').Server;
-var Schema = require('./Schema');
+var Server = require('mongodb').Server;*/
+// var Schema = require('./Schema');
+
+var mongoose = require('mongoose');
+var db = mongoose.createConnection('localhost', 'schedulein');
+
+var UserSchema = require('./UserSchema').UserSchema;
+var User = db.model('schedulein', UserSchema);
+
 // Database setup
-UserProvider = function(host, port) {
-	this.db = new Db('schedulein', new Server(host, port), {auto_reconnect: false}, function(err, db) {
+/*UserProvider = function(host, port) {
+	this.db = new Db('schedulein', new Server(host, port, {auto_reconnect: true}), {w:1}, function(err, db) {
 		if (err) {
 			throw err;
 		}
 		else {
 			console.log("Connected to MongoDB!");
+			db.open(function(err) {
+				if ( err ) {
+					throw err;
+				}
+			});
 			db.on('close', function() {
 				if (this._callBackStore) {
 					for(var key in this._callBackStore._notReplied) {
@@ -21,49 +33,81 @@ UserProvider = function(host, port) {
 			});
 		}
 	});
-};
+};*/
 
-UserProvider.prototype.find = function(name, pass, callback) {
-	this.db.collection("usercollection", function(err, user_collection) {
-		user_collection.find({
-			email:name
-		}, function(err, response) {
-			if (err) {
-				callback(err);
-			}
-			else if ( response.password == pass ){
-				callback(null, response);
-			}
-			else {
-				callback("Incorrect password");
-			}
-		});
+/*UserProvider.prototype.getCollection = function(callback) {
+	this.db.collection('usercollection', function(error, usercollection) {
+		if (error) {
+			callback("Could not get database");
+		}
+		else {
+			callback(null, usercollection);
+		}
 	});
-};
+};*/
 
-UserProvider.prototype.signUpUser = function(name, pass, callback) {
-	// Creating object for the user
-	var user = Schema.user;
-	user.email = name;
-	user.password = pass;
+var find = function(name, pass, callback) {
+	User.find({}, function(err, user) {
+		for (var i=0; i<user.length; i++) {
+			console.log("A USER");
+			console.log(user);
+		}
+	});
 	
-	// Adding the user to the DB
-	this.db.collection("usercollection", function(err, usercollection) {
+	User.find({email : name}, 'password', function(err, user) {
 		if ( err ) {
 			callback(err);
 		}
+		else if (!user) {
+			callback("This email does not exist");
+		}
 		else {
-			usercollection.save(user, function(err, records) {
-				console.log("Adding a user");
-				if ( err ) {
+			console.log(user);
+			User.find({password : pass }, function(err, data) {
+				if (err) {
 					callback(err);
 				}
+				else if (!data || data.length == 0){
+					callback("Incorrect password");
+				}
 				else {
-					callback(null, records);
+					console.log(data);
+					callback(null, data);
 				}
 			});
 		}
 	});
 };
 
-exports.UserProvider = UserProvider;
+// Signs up the user
+var signUpUser = function(name, pass, callback) {
+	
+	//Create JSON of object
+	var userObj = {
+			email : name,
+			password : pass
+	};
+	
+	// Check if already exists
+	User.find(userObj, function(err, data) {
+		if ( err ) {
+			callback(err);
+		}
+		else {
+			// If new, save inside collection
+			var user = new User(userObj);
+			user.save(function(err, doc) {
+				if (err || !doc) {
+					callback(err);
+				}
+				else {
+					callback(null, doc);
+				}
+			});
+		}
+	});
+};
+
+exports.find = find;
+exports.signUpUser = signUpUser;
+
