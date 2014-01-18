@@ -29,18 +29,4 @@ angular.module('schedulein', [])
 			otherwise({ 
 				redirectTo: '/list' 
 				});
-          }]);      
-          // Code below from 
-          // http://stackoverflow.com/questions/11541695/angular-js-redirecting-to-a-certain-route-based-on-condition
-/*          .run(function($rootScope, $location) { 
-        	  $rootScope.$on("$routeChangeStart", function(event, next, current) {
-        		 if ( $rootScope.loggedUser === null ) {
-        			 if ( next.$route.templateUrl === "partials/login.html" ) {
-        				 
-        			 }
-        			 else {
-        				 $location.path("/login");
-        			 }
-        		 } 
-        	  });
-          });*/
+          }]);

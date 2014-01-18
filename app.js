@@ -46,6 +46,7 @@ app.get('/login', isLoggedIn, function(req, res) {
 app.post('/login', function(req, res) {
 	auth.authenticate(req.body.email, req.body.password, function(err, user){
 		if ( err ) {
+			console.log(err);
 			console.log("SENDING 401");
 			res.send(401);
 		}
@@ -55,7 +56,7 @@ app.post('/login', function(req, res) {
 			req.session.regenerate(function(){
 				// Store the user's primary key into the current session
 				req.session.user = user;
-				res.redirect('/list');
+				res.send(200, user);
 			});
 		} else {
 			res.redirect('/login?error=1');
@@ -71,18 +72,9 @@ app.post('/signup', function(req, res) {
 		}
 		else {
 			req.session.user = response;
-			res.redirect('/list');
+			res.send(200, response);
 		}
 	});
-});
-
-app.get('/list', function(req, res) {
-	if (req.session.user != null) {
-		routes.index(req, res);
-	}
-	else {
-		res.redirect('/login');
-	}
 });
 
 app.get('/logout', function(req, res) {

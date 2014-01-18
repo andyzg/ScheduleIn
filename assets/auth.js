@@ -9,11 +9,18 @@ exports.authenticate = function(name, pass, callback) {
 		
 		// query the db for the given username
 		if ( !response ) {
-			console.log("Incorrect Email/Password");
-			return callback("Incorrect Email/Password");
+			console.log("Email DNE");
+			return callback("Email does not exist");
 		}
 		else {
-			callback(null, response);
+			userProvider.comparePassword(response, pass, function(err, response) {
+				if ( err ) {
+					callback(err);
+				}
+				else {
+					callback(null, response);
+				}
+			});
 		}
 	});
 };
