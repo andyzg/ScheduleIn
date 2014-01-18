@@ -13,6 +13,7 @@ html(lang='en')
 				form(action='/login',method='post')
 					div.input-group.input-box
 						input.form-control(type='text', name="user", placeholder='Email Address')
+						span.input-group-addon(name="message")= message
 					div.input-group.input-box
 						input.form-control(type='password', name="password", placeholder='Password')
 						span.input-group-btn

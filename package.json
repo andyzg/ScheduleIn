@@ -8,8 +8,8 @@
   "dependencies": {
     "express": "3.4.8",
     "jade": "*",
-    "mongodb":"latest",
-    "format":"latest",
-    "mongoose":"latest"
+    "mongoose":"latest",
+    "url":"latest",
+    "mongodb":"latest"
   }
 }

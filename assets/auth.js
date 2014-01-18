@@ -6,15 +6,14 @@ exports.authenticate = function(name, pass, callback) {
 		
 	 // Fetch from databasae
 	var user = userProvider.find(name, pass, function(err, response) {
-		console.log(response);
 		
 		// query the db for the given username
 		if ( !response ) {
-			console.log("Cannot find user");
-			return callback(new Error('cannot find user'));
+			console.log("Incorrect Email/Password");
+			return callback("Incorrect Email/Password");
 		}
 		else {
-			callback(response);
+			callback(null, response);
 		}
 	});
 };
@@ -25,7 +24,7 @@ exports.addUser = function(name, pass, callback) {
 	userProvider.find(name, pass, function(err, response) {
 		// A user was found with the same email
 		if ( response ) {
-			return callback("An account with this email already exists");
+			callback("An account with this email already exists");
 		}
 		else {
 			// Sign up the user if the email wasn't found

@@ -1,68 +1,26 @@
 // Database config
-/*var MongoClient = require('mongodb').MongoClient;
-var format = require('util').format;
-var Db = require('mongodb').Db;
-var Server = require('mongodb').Server;*/
-// var Schema = require('./Schema');
-
 var mongoose = require('mongoose');
 var db = mongoose.createConnection('localhost', 'schedulein');
 
 var UserSchema = require('./UserSchema').UserSchema;
-var User = db.model('schedulein', UserSchema);
-
-// Database setup
-/*UserProvider = function(host, port) {
-	this.db = new Db('schedulein', new Server(host, port, {auto_reconnect: true}), {w:1}, function(err, db) {
-		if (err) {
-			throw err;
-		}
-		else {
-			console.log("Connected to MongoDB!");
-			db.open(function(err) {
-				if ( err ) {
-					throw err;
-				}
-			});
-			db.on('close', function() {
-				if (this._callBackStore) {
-					for(var key in this._callBackStore._notReplied) {
-						this._callHandler(key, null, 'Connection Closed!');
-					}
-				}
-			});
-		}
-	});
-};*/
-
-/*UserProvider.prototype.getCollection = function(callback) {
-	this.db.collection('usercollection', function(error, usercollection) {
-		if (error) {
-			callback("Could not get database");
-		}
-		else {
-			callback(null, usercollection);
-		}
-	});
-};*/
+var User = db.model('usercollection', UserSchema);
 
 var find = function(name, pass, callback) {
-	User.find({}, function(err, user) {
+/*	User.find({}, function(err, user) {
 		for (var i=0; i<user.length; i++) {
 			console.log("A USER");
 			console.log(user);
 		}
-	});
-	
-	User.find({email : name}, 'password', function(err, user) {
+	});*/
+	console.log("Finding " + name);
+	User.find({email : name}, function(err, user) {
 		if ( err ) {
 			callback(err);
 		}
-		else if (!user) {
+		else if ( !user || user.length == 0 ) {
 			callback("This email does not exist");
 		}
 		else {
-			console.log(user);
 			User.find({password : pass }, function(err, data) {
 				if (err) {
 					callback(err);
@@ -71,7 +29,6 @@ var find = function(name, pass, callback) {
 					callback("Incorrect password");
 				}
 				else {
-					console.log(data);
 					callback(null, data);
 				}
 			});
@@ -94,6 +51,7 @@ var signUpUser = function(name, pass, callback) {
 			callback(err);
 		}
 		else {
+			console.log("Creating object for " + name);
 			// If new, save inside collection
 			var user = new User(userObj);
 			user.save(function(err, doc) {
