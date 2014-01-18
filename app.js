@@ -4,14 +4,9 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var http = require('http');
 var path = require('path');
-var key = require('./key');
 var auth = require('./assets/auth');
 
-var APP_ID = key.parse.APP_ID;
-var MASTER_KEY = key.parse.MASTER_KEY;
-var Parse = require('node-parse-api').Parse;
-
-var parse = new Parse(APP_ID, MASTER_KEY);
+var ArticleProvider = require('./assets/UserProvider');
 var app = express();
 
 // all environments
@@ -61,6 +56,20 @@ app.post('/login', function(req, res) {
 		}
 	});
 });
+
+app.post('/signup', function(req, res) {
+	auth.addUser(req.body.user, req.body.password, function(err, response) {
+		if (err) {
+			console.log(err);
+		}
+		else {
+			req.session.user = response;
+			res.redirect('/list');
+		}
+	});
+});
+
+app.get('/list', routes.index);
 
 if (!module.parent) {
 	http.createServer(app).listen(app.get('port'), function(){
