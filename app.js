@@ -1,0 +1,69 @@
+// Module dependencies.
+var express = require('express');
+var routes = require('./routes');
+var user = require('./routes/user');
+var http = require('http');
+var path = require('path');
+var key = require('./key');
+var auth = require('./assets/auth');
+
+var APP_ID = key.parse.APP_ID;
+var MASTER_KEY = key.parse.MASTER_KEY;
+var Parse = require('node-parse-api').Parse;
+
+var parse = new Parse(APP_ID, MASTER_KEY);
+var app = express();
+
+// all environments
+app.set('port', process.env.PORT || 3000);
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'jade');
+app.use(express.favicon());
+app.use(express.logger('dev'));
+app.use(express.json());
+app.use(express.urlencoded());
+app.use(express.methodOverride());
+app.use(app.router);
+app.use(express.static(path.join(__dirname, 'public')));
+
+// development only
+if ('development' == app.get('env')) {
+  app.use(express.errorHandler());
+}
+
+app.get('/', function(req, res) {
+	res.redirect('login');
+});
+
+app.get('/login', function(req, res) {
+	res.render('login');	
+});
+
+app.post('/login', function(req, res) {
+	auth.authenticate(req.body.user, req.body.password, function(err, user){
+		if ( user ) {
+			// Regenerate session when signing in
+			// to prevent fixation 
+			req.session.regenerate(function(){
+			
+				// Store the user's primary key 
+				// in the session store to be retrieved,
+				// or in this case the entire user object
+				
+				req.session.user = user;
+				req.session.success = 'Authenticated as ' + user.name
+					+ ' click to <a href="/logout">logout</a>. '
+					+ ' You may now access <a href="/restricted">/restricted</a>.';
+				res.redirect('back');
+			});
+		} else {
+			res.redirect('/login?error=1');
+		}
+	});
+});
+
+if (!module.parent) {
+	http.createServer(app).listen(app.get('port'), function(){
+	  console.log('Express server listening on port ' + app.get('port'));
+	});
+}
