@@ -1,20 +1,21 @@
 doctype html
-html(lang='en')
+html(lang='en', ng-app='schedulein')
 	head
 		meta(charset = 'utf-8')
 		meta(name='viewport', content='width=device-width, initial-scale=1, user-scalable=no')
 		title= title
 		link(rel='stylesheet', href='//netdna.bootstrapcdn.com/bootstrap/3.0.1/css/bootstrap.min.css')
 		link(rel='stylesheet', href='/stylesheets/style.css')
+		link(rel='stylesheet', href='/stylesheets/login.css')
 
 		script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js')
 		script(src='//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular-resource.min.js')
 
 		//- Angular service provider, binds controllers and templates to page
 		script(src='/javascript/app.js')
-		//- script(src='/javascript/controller.js')
-	body
-		nav.navbar.navbar-inverse.navbar-fixed-top(role='navigation')
+		script(src='/javascript/controller.js')
+	body(ng-controller='LoginCtrl')
+		nav.navbar.navbar-inverse(role='navigation')
 			div.center.container
 				div.navbar-header
 					button.navbar-toggle(type='button', data-toggle='collapse', data-target='#bs-example-navbar-collapse-1')
@@ -26,7 +27,7 @@ html(lang='en')
 					a.navbar-brand.btn-group.big(href='/')= title
 				ul.nav.navbar-nav.navbar-right
 					li
-						a.btn-group(href='#/problem')
+						a.btn-group(href='#/')
 							| Jobs
 					li
 						a.btn-group(href='#/profile')

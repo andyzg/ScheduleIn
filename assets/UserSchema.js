@@ -15,7 +15,7 @@ var timeSchema = new mongoose.Schema({
 exports.UserSchema = new mongoose.Schema({
 	email:String,
 	password: String,
-	job: {
+	jobs: {
 		id:[jobSchema],
 		jobTitle:String
 	}

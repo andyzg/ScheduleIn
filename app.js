@@ -37,16 +37,17 @@ app.get('/', isLoggedIn, function(req, res) {
 app.get('/login', isLoggedIn, function(req, res) {
 	if ( req.query.error != null ) {
 		console.log("Hello there");
-		res.render('login', {message:"Invalid login"});
+		res.render('index', {message:"Invalid login"});
 		return;
 	}
-	res.render('login');
+	res.render('index');
 });
 
 app.post('/login', function(req, res) {
-	auth.authenticate(req.body.user, req.body.password, function(err, user){
+	auth.authenticate(req.body.email, req.body.password, function(err, user){
 		if ( err ) {
-			res.redirect('/login?error=1');
+			console.log("SENDING 401");
+			res.send(401);
 		}
 		else if ( user != null) {
 			// Regenerate session when signing in
@@ -63,10 +64,10 @@ app.post('/login', function(req, res) {
 });
 
 app.post('/signup', function(req, res) {
-	auth.addUser(req.body.user, req.body.password, function(err, response) {
+	auth.addUser(req.body.email, req.body.password, function(err, response) {
 		if (err) {
 			console.log(err);
-			res.redirect('/login');
+			res.send(401, err);
 		}
 		else {
 			req.session.user = response;
@@ -91,7 +92,6 @@ app.get('/logout', function(req, res) {
 
 // Routing for requests if user is authenticated
 function isLoggedIn(req, res, next) {
-	console.log(req.session.user);
 	if (req.session.user != null) {
 		res.redirect('/list');
 	}

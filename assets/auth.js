@@ -24,7 +24,7 @@ exports.addUser = function(name, pass, callback) {
 	userProvider.find(name, pass, function(err, response) {
 		// A user was found with the same email
 		if ( response ) {
-			callback("An account with this email already exists");
+			callback("Email already exists");
 		}
 		else {
 			// Sign up the user if the email wasn't found

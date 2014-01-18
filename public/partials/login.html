@@ -1,0 +1,24 @@
+<div class="login-box">
+	<div class="input-group input-box">
+		<input class="form-control" type="text" name="user" placeholder="Email Address" ng-model="form.email">
+		<span class="input-group-addon" name="message">{{ loginMessage }}</span>
+	</div>
+	<div class="input-group input-box">
+		<input class="form-control" type="password" name="password" placeholder="Password" ng-model="form.password">
+		<span class="input-group-btn" name="message">
+			<button class="btn btn-default" type="submit" ng-click='logIn()'>Log In</button>
+		</span>
+	</div>
+</div>
+<div class="login-box">
+	<div class="input-group input-box">
+		<input class="form-control" type="text" name="user" placeholder="Email Address" ng-model="newUser.email">
+		<span class="input-group-addon" name="message"></span>
+	</div>
+	<div class="input-group input-box">
+		<input class="form-control" type="password" name="password" placeholder="Password" ng-model="newUser.password">
+		<span class="input-group-btn">
+			<button class="btn btn-default" type="submit" ng-click='signUp()'>Sign Up</button>
+		</span>
+	</div>
+</div>
