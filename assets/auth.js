@@ -1,6 +1,5 @@
-var hash = require('./pass').hash;
 var UserProvider = require('./UserProvider').UserProvider;
-exports.authenticate = function(name, pass, fn) {
+exports.authenticate = function(name, pass, callback) {
 	console.log('authenticating %s:%s', name, pass);
 
 var userProvider= new UserProvider('localhost', 27017);
@@ -13,23 +12,25 @@ var userProvider= new UserProvider('localhost', 27017);
   // query the db for the given username
   if ( !user ) {
 	  console.log("Cannot find user");
-	  return fn(new Error('cannot find user'));
+	  return callback(new Error('cannot find user'));
   }
-  
-  // apply the same algorithm to the POSTed password, applying
-  // the hash against the pass / salt, if there is a match we
-  // found the user
-/*  hash(pass, user.salt, function(err, hash){
-	  console.log("Hashing");
-    if ( err ) {
-    	return fn(err);
-    }
-    
-    if ( hash == user.hash ) {
-    	return fn(null, user);
-    }
-    
-    // Final possibility
-    fn(new Error('invalid password'));
-  });*/
+};
+
+// Adds a user to the system
+exports.addUser = function(name, pass, callback) {
+	var user = userProvider.find(name, pass, function(err, response) {
+		// A user was found with the same email
+		if (response) {
+			return callback("An account with this email already exists");
+		}
+		else {
+			// Sign up the user if the email wasn't found
+			userProvider.signUpUser(name, pass, function(err, response) {
+				if (err) {
+					callback(err, response);
+				}
+			});
+		}
+	});
+	
 };
