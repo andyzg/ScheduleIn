@@ -30,11 +30,7 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', isLoggedIn, function(req, res) {
-	res.redirect('login');
-});
-
-app.get('/login', isLoggedIn, function(req, res) {
+app.get('/', /*isLoggedIn,*/ function(req, res) {
 	if ( req.query.error != null ) {
 		console.log("Hello there");
 		res.render('index', {message:"Invalid login"});
@@ -82,13 +78,13 @@ app.get('/logout', function(req, res) {
 	res.redirect('/');
 });
 
-// Routing for requests if user is authenticated
+/*// Routing for requests if user is authenticated
 function isLoggedIn(req, res, next) {
 	if (req.session.user != null) {
-		res.redirect('/list');
+		res.redirect('/');
 	}
 	next();
-};
+};*/
 
 if (!module.parent) {
 	http.createServer(app).listen(app.get('port'), function(){

@@ -3,7 +3,7 @@ angular.module('schedulein', [])
 		$routeProvider.
 			when('/', 
 				{
-					templateUrl: 'partials/login.html',
+					templateUrl: 'partials/list.html',
 					controller: LoginCtrl 
 				}).
 			when('/list', 

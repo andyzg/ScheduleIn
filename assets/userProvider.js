@@ -16,18 +16,6 @@ var find = function(name, pass, callback) {
 		}
 		else {
 			callback(null, user);
-/*			comparePassword(user.password, pass);
-			User.find({password : pass }, function(err, data) {
-				if (err) {
-					callback(err);
-				}
-				else if (!data || data.length == 0){
-					callback("Incorrect password");
-				}
-				else {
-					callback(null, data);
-				}
-			});*/
 		}
 	});
 };
@@ -69,10 +57,6 @@ var signUpUser = function(name, pass, callback) {
 };
 
 var comparePassword = function(data, password, callback) {
-	console.log(data[0].password);
-	console.log(typeof data[0].password);
-	console.log(password);
-	console.log(typeof password);
 	if ( data[0].password === password ) {
 		callback(null, data);
 	}
