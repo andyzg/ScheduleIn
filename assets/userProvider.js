@@ -21,11 +21,11 @@ UserProvider = function(host, port) {
 			});
 		}
 	});
-}
+};
 
 UserProvider.prototype.find = function(name, pass, callback) {
-	this.db.collection("user-collection", function(err, user_collection) {
-		user_collection.findOne({
+	this.db.collection("usercollection", function(err, user_collection) {
+		user_collection.find({
 			email:name
 		}, function(err, response) {
 			if (err) {
@@ -43,17 +43,18 @@ UserProvider.prototype.find = function(name, pass, callback) {
 
 UserProvider.prototype.signUpUser = function(name, pass, callback) {
 	// Creating object for the user
-	var user = Schema.user();
+	var user = Schema.user;
 	user.email = name;
 	user.password = pass;
 	
 	// Adding the user to the DB
-	this.db.collection("user-collection", function(err, user_collection) {
+	this.db.collection("usercollection", function(err, usercollection) {
 		if ( err ) {
 			callback(err);
 		}
 		else {
-			user_collection.insert(user, {safe:true}, function(err, records) {
+			usercollection.save(user, function(err, records) {
+				console.log("Adding a user");
 				if ( err ) {
 					callback(err);
 				}
