@@ -17,7 +17,6 @@ function LoginCtrl($rootScope, $scope, $http, $location) {
 		success(function(data, status, headers, config) {
 			$rootScope.loggedIn = '1';
 			$rootScope.user = data[0];
-			console.log($rootScope.user.email);
 			$location.path('/list');
 		}).
 		error(function(data, status, headers, config) {
@@ -42,11 +41,8 @@ function LoginCtrl($rootScope, $scope, $http, $location) {
 }
 
 function JobListCtrl($rootScope, $scope, $location, User) {
-	// Need a routing function
-	$scope.user = User.query(function() {
-		console.log("OMG");
-		console.log($scope.user);
-	});
+	$scope.user = $rootScope.user;
+	console.log($scope.user);
 }
 
 function NewJobCtrl($rootScope, $scope, $location, User) {
@@ -75,7 +71,8 @@ function NewJobCtrl($rootScope, $scope, $location, User) {
 		}
 		console.log("Start query");
 		
-		var user = User.query(function(user) {
+		$scope.users = User.query(function(user) {
+			console.log($scope.users);
 			console.log("Done query");
 			// Removing all of those with empty spaces while
 			// creating an array with the values
@@ -92,7 +89,7 @@ function NewJobCtrl($rootScope, $scope, $location, User) {
 			// database that has the same email (brute force method)
 			
 			console.log("Emptied the array from empty elements");
-			user.forEach(function(data) {
+			$scope.users.forEach(function(data) {
 				for ( var i = 0; i < employees.length; i++ ) {
 					if ( data.email == employees[i] ) {
 						// Add the title of the schedule to the user if they were added
@@ -121,27 +118,20 @@ function NewJobCtrl($rootScope, $scope, $location, User) {
 			
 			console.log("Ensured that there's no emails that don't exist");
 			
-			var currentUser = function() {
-				user.forEach(function(data) {
-					if ($rootScope.user.email == data.email) {
-						return data;
-					}
-				});
-			};
-			
 			// Add this schedule into the user's schedule array
-			currentUser.schedule.push($scope.schedule, function() {
-				console.log("Done pushing the new schedule");
-				User.save(function(err, response) {
-					if (err) {
-						callback(err);
-					}
-					else {
-						console.log("Successfully saved the schedule");
-						$location.path('/list');
-					}
-				});
+			$rootScope.user.schedule.push($scope.schedule);
+			var finalUser = new User($rootScope.user);
+			console.log(finalUser);
+			finalUser.$save(function(p, response) {
+				if (!p.err) {
+					console.log("Successfully saved the schedule");
+					$location.path('/list');
+				}
+				else {
+					alert("Error");
+				}
 			});
+			console.log("WTF");
 		});
 	};
       

@@ -56,6 +56,10 @@ app.get('/user', function(req, res) {
 	});
 });
 
+app.post('/user', function(req, res) {
+	res.send(200, "Good");
+});
+
 app.post('/login', function(req, res) {
 	auth.authenticate(req.body.email, req.body.password, function(err, user){
 		if ( err ) {
