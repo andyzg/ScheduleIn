@@ -154,7 +154,7 @@ function ProfileCtrl($scope, $location) {
 	// Need a routing function
 }
 
-function JobSchedCtrl($scope, $location, socket) {
+function JobSchedCtrl($rootScope, $scope, $location, socket) {
 	$scope.chat = [];
 	// Need a routing function
 	$scope.send = function() {
@@ -162,7 +162,7 @@ function JobSchedCtrl($scope, $location, socket) {
 	}
 	
 	socket.on("chat-msg", function(data) {
-		$scope.chat.push($rootScope.user.name.first + " " + $rootScope.user.name.last + " : " + data);
+		$scope.chat.push(data);
 	});
 }
 
