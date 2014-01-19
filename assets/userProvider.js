@@ -25,11 +25,11 @@ var find = function(name, pass, callback) {
 // Signs up the user
 var signUpUser = function(email, password, firstName, lastName, callback) {
 	
-	User.find({}, function(err, user) {
+/*	User.find({}, function(err, user) {
 		for (var i=0; i<user.length; i++) {
-			console.log(user);
+			user[i].remove();
 		}
-	});
+	});*/
 	
 	//Create JSON of object
 	var userObj = {

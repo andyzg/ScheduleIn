@@ -30,7 +30,7 @@ function LoginCtrl($rootScope, $scope, $http, $location) {
 		$http.post('/signUp', $scope.newUser).
 		success(function(data, status, headers, config) {
 			$rootScope.loggedIn = '1';
-			$scope.user = data;
+			$rootScope.user = data[0];
 			$location.path('/list');
 		}).
 		error(function(data, status, headers, config) {
@@ -79,11 +79,13 @@ function NewJobCtrl($rootScope, $scope, $location, User) {
 			var temp = $scope.schedule.employees;
 			var employees = [];
 			for (var i=0; i<temp.length; i++) {
-				if ( temp[i] != "" ) {
+				if ( temp[i].email !== "" ) {
+					console.log(temp[i].email);
 					employees.push(temp[i]);
 				}
 			}
 			$scope.schedule.employees = employees;
+			console.log(employees);
 			
 			// For each employee added, add to respective employee from 
 			// database that has the same email (brute force method)
@@ -91,11 +93,24 @@ function NewJobCtrl($rootScope, $scope, $location, User) {
 			console.log("Emptied the array from empty elements");
 			$scope.users.forEach(function(data) {
 				for ( var i = 0; i < employees.length; i++ ) {
-					if ( data.email == employees[i] ) {
+					if ( data.email == employees[i].email ) {
+						console.log("adding " + $scope.schedule.title + " to " + data.email);
+						
 						// Add the title of the schedule to the user if they were added
-						data.jobs.push($scope.schedule.title);
+						var Job = {
+								slots : [],
+								title : $scope.schedule.title
+						};
+						data.jobs.push(Job);
+						
+						var updatedUser = new User(data);
+						updatedUser.$save(function(p, response) {
+							console.log("safely added " + updatedUser);
+							console.log(updatedUser);
+						});
+						
 						employees.splice(i--, 1);
-						console.log(data.email + " is non existent");
+						console.log(data.email + " is existent");
 						break;
 					}
 				}
@@ -104,12 +119,12 @@ function NewJobCtrl($rootScope, $scope, $location, User) {
 			console.log("Done appending jobs to users");
 			// If the employee email doesn't exist, remove them before 
 			// pushing into the User's schedule for jobs
-			if ( employees.length != 0) {
+			if ( employees.length != 0 ) {
 				for ( i in employees ) {
-					for ( var i = 0; i < $scope.schedule.employees.length; i++ ) {
-						if ( $scope.schedule.employees[i] == i ) {
-							console.log("Removing " + $scope.schedule.employees[i]);
-							$scope.schedule.employees.splice(i, 1);
+					for ( var j = 0; j < $scope.schedule.employees.length; j++ ) {
+						if ( $scope.schedule.employees[j] == i ) {
+							console.log("Removing " + $scope.schedule.employees[j]);
+							$scope.schedule.employees.splice(i--, 1);
 							break;
 						}
 					}
@@ -123,7 +138,7 @@ function NewJobCtrl($rootScope, $scope, $location, User) {
 			var finalUser = new User($rootScope.user);
 			console.log(finalUser);
 			finalUser.$save(function(p, response) {
-				if (!p.err) {
+				if (!p.error) {
 					console.log("Successfully saved the schedule");
 					$location.path('/list');
 				}
@@ -131,7 +146,6 @@ function NewJobCtrl($rootScope, $scope, $location, User) {
 					alert("Error");
 				}
 			});
-			console.log("WTF");
 		});
 	};
       

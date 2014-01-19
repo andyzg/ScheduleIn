@@ -1,8 +1,7 @@
 var mongoose = require('mongoose');
 var jobSchema = new mongoose.Schema({
-	jobId : String,
 	slots : [TimeSchema],
-	jobTitle : String
+	title : String
 });
 
 var TimeSchema = new mongoose.Schema({
