@@ -21,7 +21,7 @@ angular.module('schedulein', ['userServices'])
 						templateUrl: 'partials/profile.html', 
 						controller: ProfileCtrl
 					}).
-			when('/list/:job', 
+			when('/job/:title', 
 					{ 
 						templateUrl: 'partials/job.html',
 						controller: JobSchedCtrl 

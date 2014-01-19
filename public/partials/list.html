@@ -1,5 +1,5 @@
 <div class="page-header">
-  <h1>Welcome {{ user.email }}</h1>
+  <h1>Welcome {{ user.name.first }} {{ user.name.last }}</h1>
 	<h1>Current Jobs</h1>
 </div>
 <div class="row">
@@ -23,8 +23,8 @@
     <li><em>No polls in database. Would you like to <a href="#/new">create one</a>?</li>
   </ul>
 
-  <ul ng-switch-default>
-    <li ng-repeat="sched in user.schedule | filter:query">
+  <ul ng-switch-default class="list-group">
+    <li class="list-group-item" ng-repeat="sched in user.schedule | filter:query">
       <a href="#/job/{{sched.title}}">{{sched.title}}</a>
     </li>
   </ul>

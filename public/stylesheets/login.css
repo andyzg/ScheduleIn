@@ -33,3 +33,23 @@ body {
 	margin-top:50px;
 	min-width:1000px;
 }
+
+.calendar table {
+	width:95%;
+	margin:10px auto 0 auto;
+}
+
+tr th {
+	text-align:center;
+	text-decoration:underline;
+	width:20%;
+}
+
+.calendar tr {
+	height:36px;
+}
+
+.calendar tr td {
+	width:20%;
+	border:1px solid black;
+}

@@ -10,6 +10,7 @@
     "jade": "*",
     "mongoose":"latest",
     "url":"latest",
-    "mongodb":"latest"
+    "mongodb":"latest",
+    "socket.io":"latest"
   }
 }

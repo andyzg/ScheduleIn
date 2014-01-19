@@ -7,8 +7,11 @@ var path = require('path');
 var auth = require('./assets/auth');
 var url = require('url');
 
+
 var UserProvider = require('./assets/UserProvider');
 var app = express();
+
+var socket = require('socket.io');
 
 // all environments
 app.set('port', process.env.PORT || 3000);
@@ -57,7 +60,7 @@ app.get('/user', function(req, res) {
 });
 
 app.post('/user', function(req, res) {
-	res.send(200, "Good");
+	res.send(200, "ok");
 });
 
 app.post('/login', function(req, res) {
@@ -97,8 +100,15 @@ app.get('/logout', function(req, res) {
 	res.redirect('/');
 });
 
-if (!module.parent) {
-	http.createServer(app).listen(app.get('port'), function(){
-	  console.log('Express server listening on port ' + app.get('port'));
+var server = http.createServer(app);
+var io = socket.listen(server);
+server.listen(app.get('port'))
+console.log('Express server listening on port ' + app.get('port'));
+
+
+io.sockets.on("connection", function(socket) {
+	socket.on("message", function(data) {
+		console.log("HEY");
+		io.sockets.emit("chat-msg", data);
 	});
-}
+});
