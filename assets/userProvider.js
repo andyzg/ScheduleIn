@@ -2,6 +2,8 @@
 var mongoose = require('mongoose');
 var db = mongoose.createConnection('localhost', 'schedulein');
 
+var TimeSchema = require('./UserSchema').TimeSchema;
+var ScheduleSchema = require('./UserSchema').ScheduleSchema;
 var UserSchema = require('./UserSchema').UserSchema;
 var User = db.model('usercollection', UserSchema);
 
@@ -21,7 +23,7 @@ var find = function(name, pass, callback) {
 };
 
 // Signs up the user
-var signUpUser = function(name, pass, callback) {
+var signUpUser = function(email, password, firstName, lastName, callback) {
 	
 	User.find({}, function(err, user) {
 		for (var i=0; i<user.length; i++) {
@@ -31,21 +33,25 @@ var signUpUser = function(name, pass, callback) {
 	
 	//Create JSON of object
 	var userObj = {
-			email : name,
-			password : pass
+			email : email,
+			password : password,
+			name : {
+				first : firstName,
+				last : lastName
+			}
 	};
 	
 	// Check if already exists using above function
-	find(name, pass, function(err, data) {
+	find(email, password, function(err, data) {
 		if ( data != null ) {
 			callback("Already exists");
 		}
 		else {
-			console.log("Creating object for " + name);
+			console.log("Creating object for " + email);
 			// If new, save inside collection
 			var user = new User(userObj);
 			user.save(function(err, doc) {
-				if (err || !doc) {
+				if ( err || !doc ) {
 					callback(err);
 				}
 				else {
@@ -65,6 +71,19 @@ var comparePassword = function(data, password, callback) {
 	}
 };
 
+var findAll = function(option, callback) {
+	User.find(option, function(err, data) {
+		if (err) {
+			callback(err) ;
+		}
+		else {
+			callback(null, data);
+		}
+	});
+};
+
 exports.find = find;
 exports.signUpUser = signUpUser;
 exports.comparePassword = comparePassword;
+exports.findAll = findAll;
+/*exports.getSchedule = getSchedule;*/

@@ -1,9 +1,9 @@
-angular.module('schedulein', [])
+angular.module('schedulein', ['userServices'])
 	.config(['$routeProvider', function($routeProvider, $locationProvider) {
 		$routeProvider.
 			when('/', 
 				{
-					templateUrl: 'partials/list.html',
+					templateUrl: 'partials/login.html',
 					controller: LoginCtrl 
 				}).
 			when('/list', 
@@ -11,12 +11,12 @@ angular.module('schedulein', [])
 					templateUrl: 'partials/list.html',
 					controller: JobListCtrl 
 				}).
-			when('/list/new', 
+			when('/new', 
 					{ 
 						templateUrl: 'partials/new.html',
 						controller: NewJobCtrl 
 					}).
-			when('/list/:profileId', 
+			when('/:profileId', 
 					{ 
 						templateUrl: 'partials/profile.html', 
 						controller: ProfileCtrl
@@ -27,6 +27,6 @@ angular.module('schedulein', [])
 						controller: JobSchedCtrl 
 					}).
 			otherwise({ 
-				redirectTo: '/list' 
+				redirectTo: '/login' 
 				});
           }]);

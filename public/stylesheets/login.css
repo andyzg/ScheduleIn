@@ -3,15 +3,33 @@ body {
 }
 
 .login-box {
-	padding:5px;
 	margin-left:auto;
 	margin-right:auto;
 	width:300px;
-	height:100px;
+	height:auto;
 	border:solid 1px #F7FFFA;
 	background-color:#FFF9F7;
+	margin-bottom:20px;
+	float:right;
 }
 
 .input-box {
 	padding:5px;
+}
+
+.credits {
+	height:179px;
+	background:url('../res/img/mhacks.png');
+}
+
+.home-description {
+	float:left;
+	width:70%;
+	height:505px;
+	background-color:rgba(0,0,0,0.2);
+}
+
+.home-box {
+	margin-top:50px;
+	min-width:1000px;
 }

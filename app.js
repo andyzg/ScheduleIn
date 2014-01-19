@@ -30,13 +30,30 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', /*isLoggedIn,*/ function(req, res) {
+app.get('/', function(req, res) {
 	if ( req.query.error != null ) {
 		console.log("Hello there");
 		res.render('index', {message:"Invalid login"});
 		return;
 	}
 	res.render('index');
+});
+
+/*app.get('/schedule', function(req, res) {
+	UserProvider.getSchedule(function(err, sched) {
+		if (!err) {
+			res.json(sched);
+		}
+	});
+});*/
+
+app.get('/user', function(req, res) {
+	UserProvider.findAll({}, function(err, data) {
+		if ( err ) {
+			res.send(401);
+		}
+		res.json(200, data);
+	});
 });
 
 app.post('/login', function(req, res) {
@@ -52,16 +69,14 @@ app.post('/login', function(req, res) {
 			req.session.regenerate(function(){
 				// Store the user's primary key into the current session
 				req.session.user = user;
-				res.send(200, user);
+				res.json(user);
 			});
-		} else {
-			res.redirect('/login?error=1');
 		}
 	});
 });
 
 app.post('/signup', function(req, res) {
-	auth.addUser(req.body.email, req.body.password, function(err, response) {
+	auth.addUser(req.body.email, req.body.password, req.body.firstName, req.body.lastName, function(err, response) {
 		if (err) {
 			console.log(err);
 			res.send(401, err);
@@ -77,14 +92,6 @@ app.get('/logout', function(req, res) {
 	req.session.user = null;
 	res.redirect('/');
 });
-
-/*// Routing for requests if user is authenticated
-function isLoggedIn(req, res, next) {
-	if (req.session.user != null) {
-		res.redirect('/');
-	}
-	next();
-};*/
 
 if (!module.parent) {
 	http.createServer(app).listen(app.get('port'), function(){

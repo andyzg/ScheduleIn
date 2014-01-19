@@ -1,22 +1,35 @@
 var mongoose = require('mongoose');
 var jobSchema = new mongoose.Schema({
-	jobId: String,
-	slot:[timeSchema]
+	jobId : String,
+	slots : [TimeSchema],
+	jobTitle : String
 });
 
-var timeSchema = new mongoose.Schema({
-	day:String,
-	time: {
+var TimeSchema = new mongoose.Schema({
+	day :String,
+	time : {
 		startTime : String,
 		endTime : String
 	}
 });
 
-exports.UserSchema = new mongoose.Schema({
-	email:String,
-	password: String,
-	jobs: {
-		id:[jobSchema],
-		jobTitle:String
-	}
+var ScheduleSchema = new mongoose.Schema({
+	title : String,
+	employees : [UserSchema],
+	slots : [TimeSchema]
 });
+
+var UserSchema = new mongoose.Schema({
+	name : {
+		first : String,
+		last : String
+	},
+	email : String,
+	password : String,
+	jobs : [jobSchema],
+	schedule : [ScheduleSchema]
+});
+
+exports.UserSchema = UserSchema;
+exports.ScheduleSchema = ScheduleSchema;
+exports.TimeSchema = TimeSchema;

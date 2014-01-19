@@ -26,7 +26,7 @@ exports.authenticate = function(name, pass, callback) {
 };
 
 // Adds a user to the system
-exports.addUser = function(name, pass, callback) {
+exports.addUser = function(name, pass, firstName, lastName, callback) {
 	
 	userProvider.find(name, pass, function(err, response) {
 		// A user was found with the same email
@@ -35,7 +35,7 @@ exports.addUser = function(name, pass, callback) {
 		}
 		else {
 			// Sign up the user if the email wasn't found
-			userProvider.signUpUser(name, pass, function(err, response) {
+			userProvider.signUpUser(name, pass, firstName, lastName, function(err, response) {
 				if ( err ) {
 					callback(err);
 				}
