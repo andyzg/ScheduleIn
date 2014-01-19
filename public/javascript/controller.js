@@ -148,7 +148,6 @@ function NewJobCtrl($rootScope, $scope, $location, User) {
 			});
 		});
 	};
-      
 }
 
 function ProfileCtrl($scope, $location) {

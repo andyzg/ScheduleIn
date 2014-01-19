@@ -18,14 +18,14 @@
 	</div>
 </div>
 
-<div class="row" ng-switch on="user.jobs.length">
+<div class="row" ng-switch on="user.sched.length">
   <ul ng-switch-when="0">
     <li><em>No polls in database. Would you like to <a href="#/new">create one</a>?</li>
   </ul>
 
   <ul ng-switch-default>
-    <li ng-repeat="job in user.jobs | filter:query">
-      <a href="#/job/{{job.title}}">{{job.title}}</a>
+    <li ng-repeat="sched in user.schedule | filter:query">
+      <a href="#/job/{{sched.title}}">{{sched.title}}</a>
     </li>
   </ul>
 </div>
